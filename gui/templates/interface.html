@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kinova robotic arm interface</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        #layout {
+            width: 100vw;
+            height: 100vh;
+            opacity: 0.6;
+
+            display: grid;
+            grid:
+            ". . . . openFingers . closeFingers ." 1fr
+            "forwardLeft forward forwardRight up . rollLeft . spinLeft " 1fr
+            "left . right .  pitchLeft . pitchRight . " 1fr
+            "backLeft back backRight down . rollRight . spinRight" 1fr
+            ". onOff home setPoint . . . . " 1fr
+            / 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: repeat(5, 1fr);
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+        }
+
+        #openFingers {grid-area: openFingers;}
+        #closeFingers {grid-area: closeFingers;}
+        #forwardLeft {grid-area: forwardLeft;}
+        #forwardRight {grid-area: forwardRight;}
+        #forward {grid-area: forward;}
+        #left {grid-area: left;}
+        #right {grid-area: right;}
+        #back {grid-area: back;}
+        #up {grid-area: up;}
+        #down {grid-area: down;}
+        #backLeft {grid-area: backLeft;}
+        #backRight {grid-area: backRight;}
+        #rollLeft {grid-area: rollLeft;}
+        #spinLeft {grid-area: spinLeft;}
+        #pitchLeft {grid-area: pitchLeft;}
+        #pitchRight {grid-area: pitchRight;}
+        #rollRight {grid-area: rollRight;}
+        #spinRight {grid-area: spinRight;}
+        #onOff {grid-area: onOff;}
+        #home {grid-area: home;}
+        #setPoint {grid-area: setPoint;}
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            width: 100%;
+            height: 100%;
+        }
+
+        .green { background: green; }
+        .red { background: red; }
+        
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+            integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+
+
+        const socket = io()
+
+        async function onOff() {
+            socket.emit('onOff')
+            if (document.getElementById('onOffButton').classList.contains('green')) {
+                document.getElementById('onOffButton').classList.remove('green')
+                document.getElementById('onOffButton').classList.add('red')
+            } else {
+                document.getElementById('onOffButton').classList.remove('red')
+                document.getElementById('onOffButton').classList.add('green')
+            }
+        }
+
+        async function home() {
+            socket.emit('home')
+        }
+
+        async function closeFingers() {
+            socket.emit('close')
+        }
+
+        async function openFingers() {
+            socket.emit('open')
+        }
+
+        async function left() {
+            socket.emit('left')
+        }
+
+        async function right() {
+            socket.emit('right')
+        }
+
+        async function forward() {
+            socket.emit('forward')
+        }
+
+        async function back() {
+            socket.emit('back')
+        }
+
+        async function up() {
+            socket.emit('up')
+        }
+
+        async function down() {
+            socket.emit('down')
+        }
+
+        async function pitchLeft() {
+            socket.emit('pitchLeft')
+        }
+
+        async function pitchRight() {
+            socket.emit('pitchRight')
+        }
+
+        async function rollRight() {
+            socket.emit('rollRight')
+        }
+
+        async function rollLeft() {
+            socket.emit('rollLeft')
+        }
+
+        async function spinLeft() {
+            socket.emit('spinLeft')
+        }
+
+        async function spinRight() {
+            socket.emit('spinRight')
+        }
+
+    </script>
+</head>
+<body>
+<div id="layout">
+    <div id="closeFingers">
+        <button onclick="closeFingers()">
+            Dicht
+        </button>
+    </div>
+    <div id="openFingers">
+        <button onclick="openFingers()">
+            Open
+        </button>
+    </div>
+    <div id="left">
+        <button onclick="left()">
+            Links
+        </button>
+    </div>
+    <div id="forward">
+        <button onclick="forward()">
+            Vooruit
+        </button>
+    </div>
+    <div id="right">
+        <button onclick="right()">
+            Rechts
+        </button>
+    </div>
+    <div id="back">
+        <button onclick="back()">
+            Achteruit
+        </button>
+    </div>
+    <div id="up">
+        <button onclick="up()">
+            Omhoog
+        </button>
+    </div>
+    <div id="down">
+        <button onclick="down()">
+            Omlaag
+        </button>
+    </div>
+    <div id="pitchLeft">
+        <button onclick="pitchLeft()">
+            Draai hand omlaag
+        </button>
+    </div>
+    <div id="pitchRight">
+        <button onclick="pitchRight()">
+            Draai hand omhoog
+        </button>
+    </div>
+    <div id="rollLeft">
+        <button onclick="rollRight()">
+            Draai hand vooruit
+        </button>
+    </div>
+    <div id="rollRight">
+        <button onclick="rollLeft()">
+            Draai hand achteruit
+        </button>
+    </div>
+    <div id="spinLeft">
+        <button onclick="spinRight()">
+            Spin hand rechts
+        </button>
+    </div>
+    <div id="spinRight">
+        <button onclick="spinLeft()">
+            Spin hand links
+        </button>
+    </div>
+    <div id="onOff">
+        <button onclick="onOff()" class='green' id="onOffButton">
+            Aan uit
+        </button>
+    </div>
+    <div id="home">
+        <button onclick="home()">
+            home
+        </button>
+    </div>
+    <div id="setPoint">
+        <button onclick="pitchRight()">
+            Standaard punten
+        </button>
+    </div>
+</div>
+<img src="{{ url_for('video_feed')}}" id="video" alt="Livestream">
+</body>
+</html>
