@@ -4,6 +4,8 @@ import cv2
 from flask import Flask, render_template, Response
 from flask_socketio import SocketIO
 import roslibpy
+# The 2 in the next line describes the camera index, cv2.CAP_V4L2 was needed
+# for my camera but might not be needed for another
 videoCapture = cv2.VideoCapture(2, cv2.CAP_V4L2)
 videoCapture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
 videoCapture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
@@ -27,6 +29,7 @@ class ControlServer():
         self.app.route('/video_feed')(self.video_feed)
         self.socketio = SocketIO(self.app)
         self.ros = roslibpy.Ros(host='0.0.0.0', port=9090)
+
         self.publisher = roslibpy.Topic(self.ros, '/eye_control/in', 'eye_control/guiMsg')
         self.service_request = roslibpy.ServiceRequest()
         self.on_state = True
@@ -41,6 +44,8 @@ class ControlServer():
                                          'twist_angular_y': 0.0,
                                          'twist_angular_z': 0.0,})
         self.speed = 2.0
+        # The following two arrays are used to more compactly determine the 
+        # content of the move message
         self.positive_directions = {'left': 'twist_linear_x',
                                     'back': 'twist_linear_y',
                                     'up': 'twist_linear_z',
@@ -103,6 +108,8 @@ class ControlServer():
             request = roslibpy.ServiceRequest({'state': True})
             self.changeFingerState.call(request)
 
+        # The rest of the document should probably be simplified but I am not
+        # sure how to do so, this works for now
         @self.socketio.on('left')
         def left():
             self.move('left')            
