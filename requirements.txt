@@ -1,0 +1,12 @@
+flask~=3.0.0
+flask-socketio~=5.3.6
+opencv-python~=4.9.0.80
+empy~=3.3.4
+numpy~=1.24.2
+pyyaml~=6.0
+defusedxml~=0.7.1
+tornado~=6.2.0
+pymongo~=4.3.3
+rospkg~=1.5.0
+catkin-pkg~=1.0.0
+roslibpy~=1.6.0
